@@ -9,6 +9,13 @@ Package for easily attaching reactions to Laravel eloquent models
 
 ## Installation
 
+### Publishing the config file
+Publishing the config file (`config/reactable.php`) is optional:
+
+```
+php artisan vendor:publish --provider="Yuges\Reactable\Providers\ReactableServiceProvider" --tag="reactable-config"
+```
+
 ### Preparing the database
 You need to publish the migration to create the reactions table:
 
@@ -22,10 +29,15 @@ After that, you need to run migrations.
 php artisan migrate
 ```
 
-### Publishing the config file
-Publishing the config file (`config/reactable.php`) is optional:
+### Publishing the seeders
+You need to publish the seeders to fill out the reaction type table:
 
 ```
-php artisan vendor:publish --provider="Yuges\Reactable\Providers\ReactableServiceProvider" --tag="reactable-config"
+php artisan vendor:publish --provider="Yuges\Reactable\Providers\ReactableServiceProvider" --tag="reactable-seeders"
 ```
 
+After that, you need to run seeders.
+
+```
+php artisan db:seed --class=ReactionTypeSeeder
+```

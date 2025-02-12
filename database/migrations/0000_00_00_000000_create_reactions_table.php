@@ -9,9 +9,9 @@ use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
-    public function __construct(protected string $table)
+    public function __construct(protected string $table = 'reactions')
     {
-        $this->$table = Config::getReactionClass(Reaction::class)::getTable();
+        $this->$table = Config::getReactionClass(Reaction::class)::getTableName();
     }
 
     public function up(): void

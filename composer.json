@@ -11,6 +11,11 @@
         "reactable",
         "laravel-reactable"
     ],
+    "homepage": "https://yuges-code.github.io/laravel-reactable/",
+    "support": {
+        "source": "https://yuges-code.github.io/laravel-reactable/",
+        "issues": "https://yuges-code.github.io/laravel-reactable/issues"
+    },
     "authors": [
         {
             "name": "Georgy",

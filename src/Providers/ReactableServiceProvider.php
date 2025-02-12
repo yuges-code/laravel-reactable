@@ -2,7 +2,7 @@
 
 namespace Yuges\Reactable\Providers;
 
-use Exception;
+use TypeError;
 use Yuges\Reactable\Config\Config;
 use Yuges\Reactable\Models\Reaction;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +15,7 @@ class ReactableServiceProvider extends ServiceProvider
         $class = Config::getReactionClass(Reaction::class);
 
         if (! is_a(new $class, Reaction::class)) {
-            throw new Exception('Invalid reaction model');
+            throw new TypeError('Invalid reaction model');
         }
 
         $class::observe(new ReactionObserver);
@@ -27,5 +27,9 @@ class ReactableServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../../database/migrations/' => database_path('migrations')
         ], 'reactable-migrations');
+
+        $this->publishes([
+            __DIR__.'/../../database/seeders/' => database_path('seeders')
+        ], 'reactable-seeders');
     }
 }
