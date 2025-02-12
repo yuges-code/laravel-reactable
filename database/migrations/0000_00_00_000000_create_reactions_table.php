@@ -1,5 +1,7 @@
 <?php
 
+use Yuges\Reactable\Config\Config;
+use Yuges\Reactable\Models\Reaction;
 use Illuminate\Support\Facades\Schema;
 use Yuges\Reactable\Models\ReactionType;
 use Illuminate\Database\Schema\Blueprint;
@@ -7,9 +9,9 @@ use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
-    public function __construct(
-        protected string $table = 'reactions'
-    ) {
+    public function __construct(protected string $table)
+    {
+        $this->$table = Config::getReactionClass(Reaction::class)::getTable();
     }
 
     public function up(): void
@@ -23,7 +25,11 @@ return new class extends Migration
 
             $table->nullableMorphs('reactor');
             $table->morphs('reactable');
-            $table->foreignIdFor(ReactionType::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table
+                ->foreignIdFor(Config::getReactionTypeClass(ReactionType::class))
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
 
             $table->timestamps();
 

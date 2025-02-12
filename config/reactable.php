@@ -5,8 +5,16 @@ return [
      * FQCN (Fully Qualified Class Name) of the models to use for comments
      */
     'models' => [
-        'reaction' => Yuges\Reactable\Models\Reaction::class,
-        'type' => Yuges\Reactable\Models\ReactionType::class,
+        'reaction' => [
+            'default' => Yuges\Reactable\Models\Reaction::class,
+            'type' => Yuges\Reactable\Models\ReactionType::class,
+        ],
+        'reactor' => [
+            'default' => \App\Models\User::class,
+            'allowed' => [
+                \App\Models\User::class,
+            ],
+        ],
     ],
 
     'types' => [
@@ -16,6 +24,7 @@ return [
     'anonymous' => false,
 
     'actions' => [
-        'process' => 'ProcessCommentAction::class',
+        'create' => Yuges\Reactable\Actions\CreateReactionAction::class,
+        'process' => Yuges\Reactable\Actions\ProcessReactionAction::class,
     ],
 ];

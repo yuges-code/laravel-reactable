@@ -10,10 +10,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property int $id
  * 
  * @property string $name
- * @property integer $weight
+ * @property int $weight
  * 
  * @property-read ?Carbon $created_at
  * @property-read ?Carbon $updated_at
+ * 
+ * @method static string getTable()
  */
 class ReactionType extends Model
 {

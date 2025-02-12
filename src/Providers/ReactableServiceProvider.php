@@ -12,8 +12,7 @@ class ReactableServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        /** @var Reaction */
-        $class = Config::getCommentClass(Reaction::class);
+        $class = Config::getReactionClass(Reaction::class);
 
         if (! is_a(new $class, Reaction::class)) {
             throw new Exception('Invalid reaction model');

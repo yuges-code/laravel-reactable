@@ -16,10 +16,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $reactor_type
  * @property int $reactable_id
  * @property string $reactable_type
- * @property ?string $parent_id
+ * @property int $reaction_type_id
  * 
  * @property-read ?Carbon $created_at
  * @property-read ?Carbon $updated_at
+ * 
+ * @method static string getTable()
  */
 class Reaction extends Model
 {
