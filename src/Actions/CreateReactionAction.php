@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Yuges\Reactable\Models\ReactionType;
 use Yuges\Reactable\Interfaces\Reactable;
 use Yuges\Reactable\Exceptions\InvalidReactor;
+use Yuges\Reactable\Enums\ReactionType as ReactionTypeEnum;
 
 class CreateReactionAction
 {
@@ -23,7 +24,7 @@ class CreateReactionAction
         return new static($reactable);
     }
 
-    public function execute(int|ReactionType $type, Reactor $reactor = null): Reaction
+    public function execute(string $type, Reactor $reactor = null): Reaction
     {
         $reactor ??= $this->getDefaultReactor();
 
@@ -33,13 +34,37 @@ class CreateReactionAction
             throw new Exception('Reactor is not eloquent model');
         }
 
+        $type = $this->getReactionType($type);
+
+        if (! $type) {
+            throw new Exception('Type of reaction not found');
+        }
+
         $attributes = [
             'reactor_id' => $reactor?->getKey() ?? null,
             'reactor_type' => $reactor?->getMorphClass() ?? null,
-            'reaction_type_id' => $type?->getKey() ?? $type,
+            'reaction_type_id' => $type->getKey(),
         ];
 
         return $this->reactable->reactions()->create($attributes);
+    }
+
+    public function getReactionType(string|ReactionType|ReactionTypeEnum $type): ?ReactionType
+    {
+        $builder = ReactionType::query();
+
+        match (true) {
+            is_int($type) => $builder->where('id', '=', $type),
+            is_string($type) => $builder->where('name', '=', strtolower($type)),
+            $type instanceof ReactionType => $builder
+                ->where('id', '=', $type->id)
+                ->orWhere('name', '=', strtolower($type->name)),
+            $type instanceof ReactionTypeEnum => $builder
+                ->where('id', '=', $type->value)
+                ->where('name', '=', strtolower($type->name)),
+        };
+
+        return $builder->first();
     }
 
     public function validateReactor(Reactor $reactor = null): void

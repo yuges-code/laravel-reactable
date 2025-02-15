@@ -2,13 +2,18 @@
 
 namespace Yuges\Reactable\Config;
 
+use TypeError;
 use Illuminate\Support\Collection;
 use Yuges\Reactable\Models\Reaction;
 use Yuges\Reactable\Interfaces\Reactor;
 use Yuges\Reactable\Models\ReactionType;
 use Yuges\Reactable\Interfaces\Reactable;
 use Yuges\Reactable\Actions\CreateReactionAction;
+use Yuges\Reactable\Actions\ProcessReactionAction;
 use Illuminate\Support\Facades\Config as ConfigFacade;
+use Yuges\Reactable\Interfaces\ReactionType as ReactionTypeInterface;
+use Yuges\Reactable\Interfaces\ReactionIcon as ReactionIconInterface;
+use Yuges\Reactable\Interfaces\ReactionWeight as ReactionWeightInterface;
 
 class Config
 {
@@ -40,6 +45,17 @@ class Config
         );
     }
 
+    public static function getProcessReactionAction(Reactable $reactable, mixed $default = null): ProcessReactionAction
+    {
+        return self::getProcessReactionActionClass($default)::create($reactable);
+    }
+
+    /** @return class-string<ProcessReactionAction> */
+    public static function getProcessReactionActionClass(mixed $default = null): string
+    {
+        return self::get('actions.process', $default);
+    }
+
     public static function getCreateReactionAction(Reactable $reactable, mixed $default = null): CreateReactionAction
     {
         return self::getCreateReactionActionClass($default)::create($reactable);
@@ -49,6 +65,42 @@ class Config
     public static function getCreateReactionActionClass(mixed $default = null): string
     {
         return self::get('actions.create', $default);
+    }
+
+    /** @return class-string<ReactionTypeInterface> */
+    public static function getReactionTypeEnumClass(mixed $default = null): string
+    {
+        $class = self::get('types', $default);
+
+        if (! is_subclass_of($class, ReactionTypeInterface::class)) {
+            throw new TypeError('Reaction type enum type error');
+        }
+
+        return $class;
+    }
+
+    /** @return class-string<ReactionIconInterface> */
+    public static function getReactionIconEnumClass(mixed $default = null): string
+    {
+        $class = self::get('icons', $default);
+
+        if (! is_subclass_of($class, ReactionIconInterface::class)) {
+            throw new TypeError('Reaction icon enum type error');
+        }
+
+        return $class;
+    }
+
+    /** @return class-string<ReactionWeightInterface> */
+    public static function getReactionWeightEnumClass(mixed $default = null): string
+    {
+        $class = self::get('weights', $default);
+
+        if (! is_subclass_of($class, ReactionWeightInterface::class)) {
+            throw new TypeError('Reaction weight enum type error');
+        }
+
+        return $class;
     }
 
     public static function get(string $key, mixed $default = null): mixed

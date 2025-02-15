@@ -15,21 +15,14 @@ class ReactionTypeSeeder extends Seeder
         }
     }
 
-    protected function create(ReactionTypeEnum $type): bool
+    protected function create(ReactionTypeEnum $type): ReactionType
     {
-        if (ReactionType::query()->where('name', '=', strtolower($type->name))->getQuery()->exists()) {
-            return false;
-        }
-
-        $model = new ReactionType();
-
-        return $model
-            ->guard(['*'])
-            ->fill([
-                'id' => $type->value,
-                'name' => strtolower($type->name),
-                'weight' => $type->weight(),
-            ])
-            ->save();
+        return ReactionType::query()->updateOrCreate([
+            'id' => $type->value,
+            'name' => strtolower($type->name),
+        ], [
+            'icon' => $type->icon()->value,
+            'weight' => $type->weight()->value,
+        ]);
     }
 }

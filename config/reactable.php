@@ -17,11 +17,15 @@ return [
         ],
     ],
 
-    'types' => [
-        'allowed' => [],
-    ],
+    'types' => Yuges\Reactable\Enums\ReactionType::class,
+    'icons' => Yuges\Reactable\Enums\ReactionIcon::class,
+    'weights' => Yuges\Reactable\Enums\ReactionWeight::class,
 
-    'anonymous' => false,
+
+    'permissions' => [
+        'anonymous' => false,
+        'duplicate' => false,
+    ],
 
     'actions' => [
         'create' => Yuges\Reactable\Actions\CreateReactionAction::class,
