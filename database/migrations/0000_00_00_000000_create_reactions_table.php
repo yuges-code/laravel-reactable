@@ -23,7 +23,10 @@ return new class extends Migration
         Schema::create($this->table, function (Blueprint $table) {
             $table->ulid('id')->primary();
 
-            $table->nullableMorphs('reactor');
+            Config::getPermissionsAnonymous(false)
+                ? $table->nullableMorphs('reactor')
+                : $table->morphs('reactor');
+
             $table->morphs('reactable');
             $table
                 ->foreignIdFor(Config::getReactionTypeClass(ReactionType::class))
@@ -33,12 +36,14 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->unique([
-                'reactor_id',
-                'reactor_type',
-                'reactable_id',
-                'reactable_type',
-            ]);
+            if (! Config::getPermissionsDuplicate(false)) {
+                $table->unique([
+                    'reactor_id',
+                    'reactor_type',
+                    'reactable_id',
+                    'reactable_type',
+                ]);
+            }
         });
     }
 

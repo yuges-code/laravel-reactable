@@ -12,7 +12,7 @@ use Yuges\Reactable\Interfaces\Reactable;
 use Yuges\Reactable\Exceptions\InvalidReactor;
 use Yuges\Reactable\Interfaces\ReactionType as ReactionTypeEnum;
 
-class CreateReactionAction
+class ToggleReactionAction
 {
     public function __construct(
         protected Reactable $reactable
@@ -24,7 +24,7 @@ class CreateReactionAction
         return new static($reactable);
     }
 
-    public function execute(int|string|ReactionType|ReactionTypeEnum $type, Reactor $reactor = null): Reaction
+    public function execute(int|string|ReactionType|ReactionTypeEnum $type, Reactor $reactor = null): ?Reaction
     {
         $reactor ??= $this->getDefaultReactor();
 
@@ -40,19 +40,16 @@ class CreateReactionAction
             throw new Exception('Type of reaction not found');
         }
 
-        $attributes = [
-            'reactor_id' => $reactor?->getKey() ?? null,
-            'reactor_type' => $reactor?->getMorphClass() ?? null,
-            'reaction_type_id' => $type->getKey(),
-        ];
-
-        if (Config::getPermissionsDuplicate()) {
-            return $this->reactable->reactions()->create($attributes);
-        }
-
         $reaction = $this->reactable->reactions()->getQuery()->whereMorphedTo('reactor', $reactor)->first();
 
-        return $reaction ?? $this->reactable->reactions()->create($attributes);
+        if ($reaction) {
+            $reaction->delete();
+
+            return null;
+        }
+
+        return Config::getCreateReactionAction($this->reactable)->execute($type, $reactor);
+
     }
 
     public function validateReactor(Reactor $reactor = null): void

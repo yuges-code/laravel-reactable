@@ -21,7 +21,6 @@ return [
     'icons' => Yuges\Reactable\Enums\ReactionIcon::class,
     'weights' => Yuges\Reactable\Enums\ReactionWeight::class,
 
-
     'permissions' => [
         'anonymous' => false,
         'duplicate' => false,
@@ -29,6 +28,6 @@ return [
 
     'actions' => [
         'create' => Yuges\Reactable\Actions\CreateReactionAction::class,
-        'process' => Yuges\Reactable\Actions\ProcessReactionAction::class,
+        'toggle' => Yuges\Reactable\Actions\ToggleReactionAction::class,
     ],
 ];

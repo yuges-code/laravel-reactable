@@ -9,7 +9,7 @@ use Yuges\Reactable\Interfaces\Reactor;
 use Yuges\Reactable\Models\ReactionType;
 use Yuges\Reactable\Interfaces\Reactable;
 use Yuges\Reactable\Actions\CreateReactionAction;
-use Yuges\Reactable\Actions\ProcessReactionAction;
+use Yuges\Reactable\Actions\ToggleReactionAction;
 use Illuminate\Support\Facades\Config as ConfigFacade;
 use Yuges\Reactable\Interfaces\ReactionType as ReactionTypeInterface;
 use Yuges\Reactable\Interfaces\ReactionIcon as ReactionIconInterface;
@@ -45,15 +45,15 @@ class Config
         );
     }
 
-    public static function getProcessReactionAction(Reactable $reactable, mixed $default = null): ProcessReactionAction
+    public static function getToggleReactionAction(Reactable $reactable, mixed $default = null): ToggleReactionAction
     {
-        return self::getProcessReactionActionClass($default)::create($reactable);
+        return self::getToggleReactionActionClass($default)::create($reactable);
     }
 
-    /** @return class-string<ProcessReactionAction> */
-    public static function getProcessReactionActionClass(mixed $default = null): string
+    /** @return class-string<ToggleReactionAction> */
+    public static function getToggleReactionActionClass(mixed $default = null): string
     {
-        return self::get('actions.process', $default);
+        return self::get('actions.toggle', $default);
     }
 
     public static function getCreateReactionAction(Reactable $reactable, mixed $default = null): CreateReactionAction
@@ -101,6 +101,16 @@ class Config
         }
 
         return $class;
+    }
+
+    public static function getPermissionsAnonymous(mixed $default = false): bool
+    {
+        return self::get('permissions.anonymous', $default);
+    }
+
+    public static function getPermissionsDuplicate(mixed $default = false): bool
+    {
+        return self::get('permissions.duplicate', $default);
     }
 
     public static function get(string $key, mixed $default = null): mixed

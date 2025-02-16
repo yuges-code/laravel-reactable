@@ -3,14 +3,15 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Yuges\Reactable\Config\Config;
 use Yuges\Reactable\Models\ReactionType;
-use Yuges\Reactable\Enums\ReactionType as ReactionTypeEnum;
+use Yuges\Reactable\Interfaces\ReactionType as ReactionTypeEnum;
 
 class ReactionTypeSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (ReactionTypeEnum::cases() as $type) {
+        foreach (Config::getReactionTypeEnumClass()::cases() as $type) {
             $this->create($type);
         }
     }
