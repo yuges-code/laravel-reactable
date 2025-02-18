@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property int $id
  * 
  * @property string $name
+ * @property string $icon
  * @property int $weight
  * 
  * @property-read ?Carbon $created_at
