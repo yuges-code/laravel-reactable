@@ -18,7 +18,7 @@ class ReactionTypeSeeder extends Seeder
 
     protected function create(ReactionTypeEnum $type): ReactionType
     {
-        return ReactionType::query()->updateOrCreate([
+        return Config::getReactionTypeClass(ReactionType::class)::query()->updateOrCreate([
             'id' => $type->value,
             'name' => strtolower($type->name),
         ], [
