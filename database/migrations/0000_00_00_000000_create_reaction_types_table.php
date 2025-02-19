@@ -23,9 +23,9 @@ return new class extends Migration
             $table->id();
 
             $table->string('name')->unique();
-            $table->integer('icon')->unique();
+            $table->string('icon')->unique();
             $table->integer('weight');
-            
+
             $table->timestamps();
         });
     }
